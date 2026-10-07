@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Minesweeper | BrainBox</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>Mines<span>weeper</span></h1>
+  <p>Reveal cells, avoid the bombs. Right-click to flag</p>
+</header>
+
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to games</a>
+
+  <div class="game-box">
+    <div class="score-bar">
+      <span>Mines: <strong id="mines">10</strong></span>
+      <span>Time: <strong id="time">0</strong></span>
+    </div>
+    <div class="mine-grid" id="grid"></div>
+    <div class="feedback" id="feedback">Click to reveal</div>
+    <p style="margin-top:14px"><button class="btn primary" id="restart">New game</button></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var W = 9, H = 9, MINES = 10;
+  var grid, over = false, started = false, safe = W * H - MINES, revealed = 0;
+  var seconds = 0, timer;
+
+  function build(first) {
+    grid = Array.from({ length: H }, function () {
+      return Array.from({ length: W }, function () {
+        return { mine: false, adj: 0, open: false, flag: false };
+      });
+    });
+
+    var placed = 0;
+    while (placed < MINES) {
+      var r = Math.floor(Math.random() * H);
+      var k = Math.floor(Math.random() * W);
+      if (grid[r][k].mine) continue;
+      if (first && Math.abs(r - first.r) <= 1 && Math.abs(k - first.k) <= 1) continue;
+      grid[r][k].mine = true;
+      placed++;
+    }
+
+    for (var i = 0; i < H; i++)
+      for (var j = 0; j < W; j++)
+        if (!grid[i][j].mine)
+          grid[i][j].adj = neighbors(i, j).filter(function (p) { return grid[p.r][p.k].mine; }).length;
+
+    over = false;
+    revealed = 0;
+    render();
+  }
+
+  function neighbors(r, k) {
+    var out = [];
+    for (var dr = -1; dr <= 1; dr++)
+      for (var dk = -1; dk <= 1; dk++) {
+        if (!dr && !dk) continue;
+        var nr = r + dr, nk = k + dk;
+        if (nr >= 0 && nr < H && nk >= 0 && nk < W) out.push({ r: nr, k: nk });
+      }
+    return out;
+  }
+
+  function flood(r, k) {
+    var cell = grid[r][k];
+    if (cell.open || cell.flag) return;
+    cell.open = true;
+    revealed++;
+    if (cell.adj === 0 && !cell.mine)
+      neighbors(r, k).forEach(function (p) { flood(p.r, p.k); });
+  }
+
+  function reveal(index) {
+    if (over) return;
+    var r = (index / W) | 0, k = index % W;
+    if (!started) {
+      started = true;
+      seconds = 0;
+      clearInterval(timer);
+      timer = setInterval(function () {
+        if (!over) {
+          seconds++;
+          document.getElementById("time").textContent = seconds;
+        }
+      }, 1000);
+      build({ r: r, k: k });
+      render();
+    }
+
+    var cell = grid[r][k];
+    if (cell.flag) return;
+
+    if (cell.mine) {
+      cell.open = true;
+      over = true;
+      grid.forEach(function (row) { row.forEach(function (c) { if (c.mine) c.open = true; }); });
+      render();
+      document.getElementById("feedback").textContent = "Boom! Try again";
+      clearInterval(timer);
+      return;
+    }
+
+    flood(r, k);
+    render();
+    if (revealed === safe) {
+      over = true;
+      document.getElementById("feedback").textContent = "You cleared the board in " + seconds + "s!";
+      clearInterval(timer);
+    }
+  }
+
+  function flag(index) {
+    if (over) return;
+    var r = (index / W) | 0, k = index % W;
+    var cell = grid[r][k];
+    if (cell.open) return;
+    cell.flag = !cell.flag;
+    var count = 0;
+    grid.forEach(function (row) { row.forEach(function (c) { if (c.flag) count++; }); });
+    document.getElementById("mines").textContent = MINES - count;
+    render();
+  }
+
+  var COLORS = ["", "#4cc9f0", "#b5e48c", "#e9c46a", "#f4a261", "#f4a261", "#f2545b", "#f2545b", "#f2545b"];
+
+  function render() {
+    var el = document.getElementById("grid");
+    var cells = el.children;
+    for (var i = 0; i < cells.length; i++) {
+      var r = (i / W) | 0, k = i % W;
+      var cell = grid[r][k];
+      var b = cells[i];
+      b.className = "cell";
+      b.textContent = "";
+      if (cell.open) {
+        b.classList.add("open");
+        if (cell.mine) { b.textContent = "\u{1F4A3}"; b.classList.add("boom"); }
+        else if (cell.adj > 0) { b.textContent = cell.adj; b.style.color = COLORS[cell.adj]; }
+      } else if (cell.flag) {
+        b.textContent = "\u{1F6A9}";
+      }
+    }
+  }
+
+  var el = document.getElementById("grid");
+  el.innerHTML = "";
+  for (var i = 0; i < W * H; i++) {
+    var b = document.createElement("button");
+    b.className = "cell";
+    (function (idx) {
+      b.onclick = function () { reveal(idx); };
+      b.oncontextmenu = function (e) { e.preventDefault(); flag(idx); };
+    })(i);
+    el.appendChild(b);
+  }
+
+  document.getElementById("restart").onclick = function () {
+    clearInterval(timer);
+    started = false;
+    seconds = 0;
+    document.getElementById("time").textContent = 0;
+    document.getElementById("mines").textContent = MINES;
+    document.getElementById("feedback").textContent = "Click to reveal";
+    build(null);
+  };
+
+  build(null);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2048 | BrainBox</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>20<b>48</b></h1>
+  <p>Slide tiles, combine matching numbers, chase 2048</p>
+</header>
+
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to games</a>
+
+  <div class="game-box">
+    <div class="score-bar">
+      <span>Score: <strong id="score">0</strong></span>
+      <span>Best: <strong id="best">0</strong></span>
+    </div>
+    <div class="g2048" id="board"></div>
+    <div class="feedback" id="feedback">Arrow keys or WASD</div>
+    <p style="margin-top:14px"><button class="btn primary" id="restart">New game</button></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var N = 4, grid, score = 0;
+  var best = +(localStorage.getItem("brainbox2048") || 0);
+  document.getElementById("best").textContent = best;
+
+  function zero() {
+    return Array.from({ length: N }, function () { return Array(N).fill(0); });
+  }
+
+  function spawn() {
+    var cells = [];
+    for (var i = 0; i < N; i++)
+      for (var j = 0; j < N; j++)
+        if (grid[i][j] === 0) cells.push([i, j]);
+    if (!cells.length) return;
+    var p = cells[Math.floor(Math.random() * cells.length)];
+    grid[p[0]][p[1]] = Math.random() < 0.9 ? 2 : 4;
+  }
+
+  function slideLine(line) {
+    var out = line.filter(function (v) { return v !== 0; });
+    var gained = 0;
+    for (var k = 0; k < out.length - 1; k++) {
+      if (out[k] === out[k + 1]) {
+        out[k] *= 2;
+        gained += out[k];
+        out.splice(k + 1, 1);
+      }
+    }
+    while (out.length < N) out.push(0);
+    return { line: out, gained: gained };
+  }
+
+  function move(dir) {
+    var before = grid.map(function (r) { return r.slice(); });
+    var gained = 0;
+
+    for (var i = 0; i < N; i++) {
+      var line = [];
+      for (var j = 0; j < N; j++) {
+        if (dir === 0) line.push(grid[i][j]);
+        else if (dir === 1) line.push(grid[i][N - 1 - j]);
+        else if (dir === 2) line.push(grid[j][i]);
+        else line.push(grid[N - 1 - j][i]);
+      }
+      line = slideLine(line);
+      gained += line.gained;
+      line = line.line;
+      for (var k = 0; k < N; k++) {
+        if (dir === 0) grid[i][k] = line[k];
+        else if (dir === 1) grid[i][k] = line[N - 1 - k];
+        else if (dir === 2) grid[i][k] = line[k];
+        else grid[i][k] = line[N - 1 - k];
+      }
+    }
+
+    var moved = JSON.stringify(grid) !== JSON.stringify(before);
+    if (moved) {
+      score += gained;
+      document.getElementById("score").textContent = score;
+      if (score > best) {
+        best = score;
+        localStorage.setItem("brainbox2048", best);
+        document.getElementById("best").textContent = best;
+      }
+      spawn();
+      render();
+      checkStatus();
+    }
+  }
+
+  function checkStatus() {
+    var hasZero = false, has2048 = false, canMerge = false;
+    for (var i = 0; i < N; i++)
+      for (var j = 0; j < N; j++) {
+        if (grid[i][j] === 0) hasZero = true;
+        if (grid[i][j] >= 2048) has2048 = true;
+        if (j < N - 1 && grid[i][j] === grid[i][j + 1]) canMerge = true;
+        if (i < N - 1 && grid[i][j] === grid[i + 1][j]) canMerge = true;
+      }
+    if (!hasZero && !canMerge) document.getElementById("feedback").textContent = "No moves left!";
+    else if (has2048) document.getElementById("feedback").textContent = "You reached 2048! Keep going?";
+    else document.getElementById("feedback").textContent = "";
+  }
+
+  var COLORS = {
+    2: ["#eee4da", "#776e65"], 4: ["#ede0c8", "#776e65"],
+    8: ["#f2b179", "#f9f6f2"], 16: ["#f59563", "#f9f6f2"],
+    32: ["#f67c5f", "#f9f6f2"], 64: ["#f65e3b", "#f9f6f2"],
+    128: ["#edcf72", "#f9f6f2"], 256: ["#edcc61", "#f9f6f2"],
+    512: ["#edc850", "#f9f6f2"], 1024: ["#edc53f", "#f9f6f2"], 2048: ["#edc22e", "#f9f6f2"]
+  };
+
+  function render() {
+    var cells = document.getElementById("board").children;
+    for (var i = 0; i < cells.length; i++) {
+      var x = (i / N) | 0, y = i % N;
+      var v = grid[x][y];
+      cells[i].textContent = v || "";
+      cells[i].className = "tile" + (v ? " v" + v : "");
+      cells[i].style.background = v ? COLORS[v][0] : "#12162a";
+      cells[i].style.color = v ? COLORS[v][1] : "transparent";
+    }
+  }
+
+  function build() {
+    score = 0;
+    document.getElementById("score").textContent = 0;
+    grid = zero();
+    spawn();
+    spawn();
+    render();
+    document.getElementById("feedback").textContent = "Arrow keys or WASD";
+  }
+
+  document.addEventListener("keydown", function (e) {
+    var map = { ArrowUp: 2, w: 2, W: 2, ArrowDown: 3, s: 3, S: 3, ArrowLeft: 0, a: 0, A: 0, ArrowRight: 1, d: 1, D: 1 };
+    if (map[e.key] !== undefined) { e.preventDefault(); move(map[e.key]); }
+  });
+
+  var tx = 0, ty = 0;
+  document.getElementById("board").addEventListener("touchstart", function (e) {
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+  });
+  document.getElementById("board").addEventListener("touchmove", function (e) { e.preventDefault(); }, { passive: false });
+  document.getElementById("board").addEventListener("touchend", function (e) {
+    var dx = e.changedTouches[0].clientX - tx;
+    var dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) < 24 && Math.abs(dy) < 24) return;
+    if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 1 : 0);
+    else move(dy > 0 ? 3 : 2);
+  });
+
+  var el = document.getElementById("board");
+  el.innerHTML = "";
+  for (var k = 0; k < N * N; k++) {
+    var d = document.createElement("div");
+    d.className = "tile";
+    el.appendChild(d);
+  }
+
+  document.getElementById("restart").onclick = build;
+  build();
+})();
+</script>
+</body>
+</html>

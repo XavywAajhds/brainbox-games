@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Breakout | BrainBox</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>Break<b>out</b></h1>
+  <p>Clear all the bricks before the ball gets away</p>
+</header>
+
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to games</a>
+
+  <div class="game-box">
+    <div class="score-bar">
+      <span>Score: <strong id="score">0</strong></span>
+      <span>Lives: <strong id="lives">3</strong></span>
+    </div>
+    <canvas id="game" width="480" height="360"></canvas>
+    <div class="feedback" id="feedback">Press SPACE to launch</div>
+    <p style="margin-top:14px"><button class="btn primary" id="restart">New game</button></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var c = document.getElementById("game");
+  var ctx = c.getContext("2d");
+  var W = 480, H = 360;
+
+  var paddle = { w: 80, h: 12, x: W / 2 - 40, y: H - 30, speed: 7 };
+  var ball = { r: 6, x: 0, y: 0, vx: 0, vy: 0, speed: 4 };
+  var bricks = [];
+  var score = 0, lives = 3, over = false, winner = false, launched = false, running = false;
+
+  var COLS = 8, ROWS = 5;
+  var bw = 52, bh = 18, ox = 16, oy = 36, gap = 6;
+  var COLORS = ["#f2545b", "#f4a261", "#e9c46a", "#b5e48c", "#4cc9f0"];
+
+  function buildBricks() {
+    bricks = [];
+    for (var r = 0; r < ROWS; r++)
+      for (var k = 0; k < COLS; k++)
+        bricks.push({ x: ox + k * (bw + gap), y: oy + r * (bh + gap), w: bw, h: bh, alive: true, row: r });
+  }
+
+  function resetBall() {
+    ball.x = paddle.x + paddle.w / 2;
+    ball.y = paddle.y - ball.r;
+    ball.vx = 0; ball.vy = 0;
+    launched = false;
+    document.getElementById("feedback").textContent = "Press SPACE to launch";
+  }
+
+  function start() {
+    score = 0; lives = 3; over = false; winner = false;
+    document.getElementById("score").textContent = 0;
+    document.getElementById("lives").textContent = 3;
+    paddle.x = W / 2 - paddle.w / 2;
+    buildBricks();
+    resetBall();
+    running = true;
+  }
+
+  function step() {
+    if (!running || over) return;
+
+    var keys = pkeys;
+    paddle.x += (keys.right ? paddle.speed : 0) - (keys.left ? paddle.speed : 0);
+    paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
+
+    if (launched) {
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+
+      if (ball.x < ball.r) { ball.x = ball.r; ball.vx *= -1; }
+      if (ball.x > W - ball.r) { ball.x = W - ball.r; ball.vx *= -1; }
+      if (ball.y < ball.r) { ball.y = ball.r; ball.vy *= -1; }
+
+      if (ball.y > H - ball.r) {
+        lives--;
+        document.getElementById("lives").textContent = lives;
+        if (lives <= 0) {
+          over = true;
+          document.getElementById("feedback").textContent = "Game over - score " + score;
+          return;
+        }
+        resetBall();
+        return;
+      }
+
+      if (ball.vy > 0 && ball.x + ball.r > paddle.x && ball.x - ball.r < paddle.x + paddle.w &&
+          ball.y + ball.r > paddle.y && ball.y + ball.r < paddle.y + paddle.h + 8) {
+        ball.vy = -Math.abs(ball.vy);
+        ball.vx += (ball.x - (paddle.x + paddle.w / 2)) / 40;
+        ball.vx = Math.max(-ball.speed * 1.6, Math.min(ball.speed * 1.6, ball.vx));
+        ball.y = paddle.y - ball.r;
+      }
+
+      for (var i = 0; i < bricks.length; i++) {
+        var b = bricks[i];
+        if (!b.alive) continue;
+        if (ball.x + ball.r > b.x && ball.x - ball.r < b.x + b.w &&
+            ball.y + ball.r > b.y && ball.y - ball.r < b.y + b.h) {
+          b.alive = false;
+          score += 10 * (ROWS - b.row);
+          document.getElementById("score").textContent = score;
+          ball.vy *= -1;
+          var remaining = bricks.filter(function (x) { return x.alive; }).length;
+          if (remaining === 0) {
+            winner = true; over = true;
+            document.getElementById("feedback").textContent = "You cleared all bricks! Score " + score;
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  function render() {
+    ctx.fillStyle = "#12162a";
+    ctx.fillRect(0, 0, W, H);
+
+    bricks.forEach(function (b) {
+      if (!b.alive) return;
+      ctx.fillStyle = COLORS[b.row];
+      ctx.fillRect(b.x, b.y, b.w, b.h);
+    });
+
+    ctx.fillStyle = "#2a3155";
+    for (var k = 0; k < paddle.w; k += 8) ctx.fillRect(paddle.x + k, paddle.y, 6, paddle.h);
+
+    ctx.fillStyle = "#4cc9f0";
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  var pkeys = { left: false, right: false };
+  document.addEventListener("keydown", function (e) {
+    var key = e.key;
+    if (key === "ArrowLeft" || key.toLowerCase() === "a") { pkeys.left = true; e.preventDefault(); }
+    if (key === "ArrowRight" || key.toLowerCase() === "d") { pkeys.right = true; e.preventDefault(); }
+    if (key === " " || key === "Spacebar") {
+      e.preventDefault();
+      if (!launched && !over) {
+        launched = true;
+        var ang = (Math.random() - 0.5) * 0.6;
+        ball.vx = Math.sin(ang) * ball.speed;
+        ball.vy = -Math.cos(ang) * ball.speed;
+        document.getElementById("feedback").textContent = "";
+      }
+    }
+  });
+  document.addEventListener("keyup", function (e) {
+    var key = e.key;
+    if (key === "ArrowLeft" || key.toLowerCase() === "a") pkeys.left = false;
+    if (key === "ArrowRight" || key.toLowerCase() === "d") pkeys.right = false;
+  });
+
+  document.getElementById("restart").onclick = start;
+
+  setInterval(function () { step(); render(); }, 16);
+  start();
+})();
+</script>
+</body>
+</html>
