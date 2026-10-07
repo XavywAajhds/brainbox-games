@@ -428,3 +428,119 @@ footer {
   margin: 20px 0 30px;
 }
 .card { text-align: center; }
+
+/* ---- header search ---- */
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #12162a;
+  border: 1px solid #2a3155;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.search input {
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  padding: 9px 12px;
+  font-size: 0.92rem;
+  width: 190px;
+}
+
+.search input::placeholder { color: var(--muted); }
+.search button {
+  background: transparent;
+  border: 0;
+  color: var(--accent);
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.search button:hover { background: #232a52; }
+
+/* ---- game window ---- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(6, 8, 16, 0.78);
+  backdrop-filter: blur(4px);
+}
+
+.overlay[hidden] { display: none; }
+
+.win {
+  width: min(1100px, 94vw);
+  height: min(760px, 88vh);
+  display: flex;
+  flex-direction: column;
+  background: #0f1220;
+  border: 1px solid #2a3155;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.win:fullscreen {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
+.win-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #151a2c;
+  border-bottom: 1px solid #2a3155;
+}
+
+.win-title { font-weight: 600; font-size: 0.95rem; }
+
+.win-btns { display: flex; gap: 6px; }
+
+.win-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: #2a3155;
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.win-btn:hover { background: #384070; }
+
+.win-body { position: relative; flex: 1; background: #000; }
+
+.win-body iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+}
+
+.win-loading {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.win-loading[hidden] { display: none; }
