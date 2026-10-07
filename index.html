@@ -44,9 +44,9 @@
           <span class="bname">Mist<span>.Dev</span> <em>Browser</em></span>
         </div>
         <div class="tabbar" id="tabbar"></div>
-        <form class="omnibox" id="omnibox">
+<form class="omnibox" id="omnibox" action="https://duckduckgo.com/" method="get" target="_blank" rel="noopener">
           <span class="omni-dot"></span>
-          <input type="text" id="omniInput" placeholder="Search with DuckDuckGo or type a URL" autocomplete="off" />
+          <input type="text" name="q" id="omniInput" placeholder="Search with DuckDuckGo (opens in a new tab)" autocomplete="off" />
           <button type="submit">Go</button>
         </form>
         <div class="shortcuts">
@@ -246,38 +246,43 @@
     renderTabs(); renderView();
   }
 
-  function renderView() {
+function renderView() {
     var t = activeTab();
     if (!t.url) {
-      viewport.innerHTML = '<p class="vp-hint">Type above or pick a shortcut.</p>';
+      viewport.innerHTML = '<p class="vp-hint">Search above or pick a shortcut. Sites open in a real new tab.</p>';
       return;
     }
     viewport.innerHTML = "";
-    var bar = document.createElement("div");
-    bar.className = "vp-note";
+    var card = document.createElement("div");
+    card.className = "vp-card";
     var a = document.createElement("a");
     a.href = t.url; a.target = "_blank"; a.rel = "noopener";
-    a.textContent = "Open in new tab";
-    bar.appendChild(document.createTextNode(t.url + " "));
-    bar.appendChild(a);
-    var f = document.createElement("iframe");
-    f.className = "vp-frame";
-    f.src = t.url;
-    viewport.appendChild(bar);
-    viewport.appendChild(f);
+    a.className = "vp-open";
+    a.textContent = "Open " + t.title;
+    var small = document.createElement("span");
+    small.className = "vp-url";
+    small.textContent = t.url;
+    var note = document.createElement("p");
+    note.className = "vp-hint";
+    note.textContent = "This site can't be displayed inside the page, so it opens in a new tab.";
+    card.appendChild(a); card.appendChild(small); card.appendChild(note);
+    viewport.appendChild(card);
   }
 
   document.getElementById("omnibox").addEventListener("submit", function (e) {
     e.preventDefault();
     var q = document.getElementById("omniInput").value.trim();
     if (!q) return;
-    var url = /^https?:\/\//i.test(q) ? q : "https://duckduckgo.com/?q=" + encodeURIComponent(q);
-    navigate(url, "DuckDuckGo");
+    var isUrl = /^https?:\/\//i.test(q);
+    var url = isUrl ? q : "https://duckduckgo.com/?q=" + encodeURIComponent(q);
+    window.open(url, "_blank", "noopener");
+    navigate(url, isUrl ? q : "DuckDuckGo");
   });
 
   document.querySelectorAll(".shortcut").forEach(function (a) {
     a.addEventListener("click", function (e) {
       e.preventDefault();
+      window.open(a.dataset.url, "_blank", "noopener");
       navigate(a.dataset.url, a.textContent.trim());
     });
   });
