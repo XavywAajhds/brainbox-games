@@ -3,48 +3,73 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Games</title>
+<title>Mist.Dev</title>
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-<nav class="nav">
-  <div class="brand">Games</div>
-  <form class="search" action="https://duckduckgo.com/" method="get" target="_blank" rel="noopener">
-    <input type="text" name="q" placeholder="Search the web..." autocomplete="off" />
-    <button type="submit" aria-label="Search">&#128269;</button>
-  </form>
-</nav>
+<div class="app">
+  <aside class="side">
+    <div class="brand">Mist<span>.Dev</span></div>
+    <nav class="tabs">
+      <button class="tab active" data-page="home" type="button">
+        <img src="assets/home.png" alt="" /><span>Home</span>
+      </button>
+      <button class="tab" data-page="games" type="button">
+        <img src="assets/controller.png" alt="" /><span>Games</span>
+      </button>
+      <button class="tab" data-page="browser" type="button">
+        <img src="assets/globe.png" alt="" /><span>Browser</span>
+      </button>
+    </nav>
+    <div class="side-foot">v1.0</div>
+  </aside>
 
-<main class="wrap">
-  <h1 class="page-title">Minecraft Clients</h1>
-  <div class="grid" id="clients">
-    <a class="card" href="mc-1.8.8.html" data-src="mc-1.8.8.html" data-title="Minecraft 1.8.8" title="EaglercraftX 1.8.8">
-      <img class="mc-logo" src="https://www.minecraft.net/content/dam/minecraftnet/logos/logo-minecraft-500x500.png" alt="Minecraft" />
-      <h2>Minecraft 1.8.8</h2>
-      <p class="ver">EaglercraftX &bull; 1.8.8</p>
-    </a>
-    <a class="card" href="mc-1.12.2.html" data-src="mc-1.12.2.html" data-title="Minecraft 1.12.2" title="Eaglercraft 1.12.2">
-      <img class="mc-logo" src="https://www.minecraft.net/content/dam/minecraftnet/logos/logo-minecraft-500x500.png" alt="Minecraft" />
-      <h2>Minecraft 1.12.2</h2>
-      <p class="ver">Eaglercraft &bull; 1.12.2</p>
-    </a>
-    <a class="card" href="mc-1.5.2.html" data-src="mc-1.5.2.html" data-title="Minecraft 1.5.2" title="Eaglercraft 1.5.2">
-      <img class="mc-logo" src="https://www.minecraft.net/content/dam/minecraftnet/logos/logo-minecraft-500x500.png" alt="Minecraft" />
-      <h2>Minecraft 1.5.2</h2>
-      <p class="ver">Eaglercraft &bull; 1.5.2</p>
-    </a>
-    <a class="card" href="mc-beta-1.7.3.html" data-src="mc-beta-1.7.3.html" data-title="Minecraft Beta 1.7.3" title="Eaglercraft Beta 1.7.3">
-      <img class="mc-logo" src="https://www.minecraft.net/content/dam/minecraftnet/logos/logo-minecraft-500x500.png" alt="Minecraft" />
-      <h2>Minecraft Beta 1.7.3</h2>
-      <p class="ver">Eaglercraft Beta &bull; 1.7.3</p>
-    </a>
-    <a class="card" href="mc-alpha-1.2.6.html" data-src="mc-alpha-1.2.6.html" data-title="Minecraft Alpha 1.2.6" title="Eaglercraft Alpha 1.2.6">
-      <img class="mc-logo" src="https://www.minecraft.net/content/dam/minecraftnet/logos/logo-minecraft-500x500.png" alt="Minecraft" />
-      <h2>Minecraft Alpha 1.2.6</h2>
-      <p class="ver">Eaglercraft Alpha &bull; 1.2.6</p>
-    </a>
-  </div>
-</main>
+  <main class="main">
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <h1>Welcome to <span>Mist.Dev</span></h1>
+        <p>Your home for games and the web in one place. Pick a tab on the left to get started.</p>
+      </div>
+    </section>
+
+    <section class="page" id="page-games">
+      <h2 class="page-title">Minecraft Clients</h2>
+      <div class="gamelist" id="clients">
+        <button class="gtab" data-src="mc-1.8.8.html" data-title="Minecraft 1.8.8" type="button">
+          <img src="assets/minecraft.png" alt="" />
+          <span class="gtext"><strong>Minecraft</strong><em>EaglercraftX &bull; 1.8.8</em></span>
+        </button>
+        <button class="gtab" data-src="mc-1.12.2.html" data-title="Minecraft 1.12.2" type="button">
+          <img src="assets/minecraft.png" alt="" />
+          <span class="gtext"><strong>Minecraft</strong><em>Eaglercraft &bull; 1.12.2</em></span>
+        </button>
+        <button class="gtab" data-src="mc-1.5.2.html" data-title="Minecraft 1.5.2" type="button">
+          <img src="assets/minecraft.png" alt="" />
+          <span class="gtext"><strong>Minecraft</strong><em>Eaglercraft &bull; 1.5.2</em></span>
+        </button>
+        <button class="gtab" data-src="mc-beta-1.7.3.html" data-title="Minecraft Beta 1.7.3" type="button">
+          <img src="assets/minecraft.png" alt="" />
+          <span class="gtext"><strong>Minecraft Beta</strong><em>Eaglercraft &bull; 1.7.3</em></span>
+        </button>
+        <button class="gtab" data-src="mc-alpha-1.2.6.html" data-title="Minecraft Alpha 1.2.6" type="button">
+          <img src="assets/minecraft.png" alt="" />
+          <span class="gtext"><strong>Minecraft Alpha</strong><em>Eaglercraft &bull; 1.2.6</em></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="page" id="page-browser">
+      <div class="browser">
+        <img class="globe" src="assets/globe.png" alt="" />
+        <h2>Browser</h2>
+        <form class="omnibox" action="https://duckduckgo.com/" method="get" target="_blank" rel="noopener">
+          <input type="text" name="q" placeholder="Search DuckDuckGo or type a URL..." autocomplete="off" autofocus />
+          <button type="submit">Go</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
 
 <div class="overlay" id="overlay" hidden>
   <div class="win" id="win">
@@ -57,71 +82,74 @@
       </div>
     </div>
     <div class="win-body">
-      <div class="win-loading" id="winLoad">Loading client...</div>
-      <iframe id="frame" title="Minecraft" allowfullscreen allow="autoplay; fullscreen; gamepad; clipboard-read; cross-origin-isolated"></iframe>
+      <div class="win-loading" id="winLoading">Loading client...</div>
+      <iframe id="frame" title="Minecraft" allowfullscreen allow="autoplay; fullscreen; gamepad; pointer-lock"></iframe>
     </div>
   </div>
 </div>
 
 <script>
 (function () {
+  var tabs = document.querySelectorAll(".tab");
+  var pages = document.querySelectorAll(".page");
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      tabs.forEach(function (t) { t.classList.remove("active"); });
+      pages.forEach(function (p) { p.classList.remove("active"); });
+      tab.classList.add("active");
+      document.getElementById("page-" + tab.dataset.page).classList.add("active");
+    });
+  });
+
   var overlay = document.getElementById("overlay");
   var win = document.getElementById("win");
   var frame = document.getElementById("frame");
   var titleEl = document.getElementById("winTitle");
   var loading = document.getElementById("winLoading");
   var openTab = document.getElementById("openTab");
-  var fsBtn = document.getElementById("fsBtn");
-  var closeBtn = document.getElementById("closeBtn");
 
-  function open(src, title) {
+  function openGame(src, title) {
     titleEl.textContent = title;
     openTab.href = src;
-overlay.hidden = false;
+    overlay.hidden = false;
     loading.hidden = false;
     frame.src = "about:blank";
     frame.src = src;
   }
 
   document.getElementById("clients").addEventListener("click", function (e) {
-    var card = e.target.closest(".card");
-    if (!card) return;
-    e.preventDefault();
-    open(card.getAttribute("data-src"), card.getAttribute("data-title"));
+    var btn = e.target.closest(".gtab");
+    if (!btn) return;
+    openGame(btn.dataset.src, btn.dataset.title);
   });
 
   frame.addEventListener("load", function () {
-    if (frame.src && frame.src.indexOf("about:blank") === -1) {
-      document.getElementById("winLoading").hidden = true;
-    }
+    if (frame.src && frame.src.indexOf("about:blank") === -1) loading.hidden = true;
   });
 
   function closeWin() {
     if (document.fullscreenElement) document.exitFullscreen();
     frame.src = "about:blank";
-    document.getElementById("overlay").hidden = true;
+    overlay.hidden = true;
   }
   document.getElementById("closeBtn").addEventListener("click", closeWin);
 
-  function toggleFs() {
-    var win = document.getElementById("win");
+  document.getElementById("fsBtn").addEventListener("click", function () {
     if (!document.fullscreenElement) {
       if (win.requestFullscreen) win.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
-  }
-  document.getElementById("fsBtn").addEventListener("click", toggleFs);
+  });
 
   document.addEventListener("fullscreenchange", function () {
-    document.getElementById("fsBtn").innerHTML = document.fullscreenElement ? "&#10064;" : "&#9974;";
-    document.getElementById("fsBtn").title = document.fullscreenElement ? "Exit fullscreen" : "Toggle fullscreen";
+    var b = document.getElementById("fsBtn");
+    b.innerHTML = document.fullscreenElement ? "&#10064;" : "&#9974;";
+    b.title = document.fullscreenElement ? "Exit fullscreen" : "Toggle fullscreen";
   });
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && !document.fullscreenElement && !document.getElementById("overlay").hidden) {
-      closeWin();
-    }
+    if (e.key === "Escape" && !document.fullscreenElement && !overlay.hidden) closeWin();
   });
 })();
 </script>
