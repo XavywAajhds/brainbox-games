@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Math Sprint | BrainBox</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>Math <span>Sprint</span></h1>
+  <p>Answer as many questions as you can in 60 seconds</p>
+</header>
+
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to games</a>
+
+  <div class="game-box" id="startScreen">
+    <h2>Choose a difficulty</h2>
+    <p class="hint">Easy: addition &amp; subtraction · Medium: multiply &amp; divide · Hard: mixed with larger numbers</p>
+    <p style="margin-top:18px">
+      <button class="btn primary" data-level="easy">Easy</button>
+      <button class="btn primary" data-level="medium">Medium</button>
+      <button class="btn primary" data-level="hard">Hard</button>
+    </p>
+  </div>
+
+  <div class="game-box" id="playScreen" style="display:none">
+    <div class="score-bar">
+      <span>Score: <strong id="score">0</strong></span>
+      <span>Time: <strong id="time">60</strong>s</span>
+      <span>Streak: <strong id="streak">0</strong></span>
+    </div>
+    <div class="question" id="question">?</div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div class="game-box" id="endScreen" style="display:none">
+    <h2>Time's up!</h2>
+    <p class="question" id="finalScore">0</p>
+    <p class="hint">correct answers</p>
+    <p style="margin-top:18px">
+      <button class="btn primary" id="again">Play again</button>
+      <a class="btn" href="index.html" style="text-decoration:none;display:inline-block">All games</a>
+    </p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var score = 0, streak = 0, time = 60, timer = null, answer = 0;
+  var startScreen = document.getElementById("startScreen");
+  var playScreen = document.getElementById("playScreen");
+  var endScreen = document.getElementById("endScreen");
+
+  function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+  function makeQuestion(level) {
+    var a, b, op, correct;
+    if (level === "easy") {
+      a = rand(2, 20); b = rand(2, 20);
+      op = Math.random() < 0.5 ? "+" : "-";
+      if (op === "-" && b > a) { var t = a; a = b; b = t; }
+      correct = op === "+" ? a + b : a - b;
+    } else if (level === "medium") {
+      a = rand(2, 12); b = rand(2, 12);
+      if (Math.random() < 0.5) { op = "×"; correct = a * b; }
+      else { op = "÷"; correct = a; a = a * b; }
+    } else {
+      a = rand(5, 50); b = rand(2, 15);
+      var r = Math.random();
+      if (r < 0.4) { op = "+"; correct = a + b; }
+      else if (r < 0.7) { op = "×"; correct = a * b; }
+      else { op = "−"; if (b > a) { var t3 = a; a = b; b = t3; } correct = a - b; }
+    }
+    return { text: a + " " + op + " " + b + (op === "÷" ? "" : ""), answer: correct };
+  }
+
+  var level = "easy";
+
+  function nextQuestion() {
+    var q = makeQuestion(level);
+    answer = q.answer;
+    document.getElementById("question").textContent = q.text + " = ?";
+    var opts = [answer];
+    while (opts.length < 4) {
+      var delta = rand(1, 9) * (Math.random() < 0.5 ? -1 : 1);
+      var cand = answer + delta;
+      if (cand >= 0 && opts.indexOf(cand) === -1) opts.push(cand);
+    }
+    opts.sort(function () { return Math.random() - 0.5; });
+    var box = document.getElementById("choices");
+    box.innerHTML = "";
+    opts.forEach(function (o) {
+      var btn = document.createElement("button");
+      btn.textContent = o;
+      btn.onclick = function () { pick(o); };
+      box.appendChild(btn);
+    });
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("feedback").className = "feedback";
+  }
+
+  function pick(o) {
+    var fb = document.getElementById("feedback");
+    if (o === answer) {
+      score++; streak++;
+      fb.textContent = "Correct!";
+      fb.className = "feedback good";
+    } else {
+      streak = 0;
+      fb.textContent = "Wrong — the answer was " + answer;
+      fb.className = "feedback bad";
+    }
+    document.getElementById("score").textContent = score;
+    document.getElementById("streak").textContent = streak;
+    setTimeout(nextQuestion, 550);
+  }
+
+  function start(lvl) {
+    level = lvl;
+    score = 0; streak = 0; time = 60;
+    startScreen.style.display = "none";
+    endScreen.style.display = "none";
+    playScreen.style.display = "block";
+    document.getElementById("score").textContent = 0;
+    document.getElementById("streak").textContent = 0;
+    document.getElementById("time").textContent = 60;
+    nextQuestion();
+    clearInterval(timer);
+    timer = setInterval(function () {
+      time--;
+      document.getElementById("time").textContent = time;
+      if (time <= 0) {
+        clearInterval(timer);
+        playScreen.style.display = "none";
+        endScreen.style.display = "block";
+        document.getElementById("finalScore").textContent = score;
+      }
+    }, 1000);
+  }
+
+  document.querySelectorAll("[data-level]").forEach(function (b) {
+    b.onclick = function () { start(b.dataset.level); };
+  });
+  document.getElementById("again").onclick = function () { startScreen.style.display = "block"; endScreen.style.display = "none"; };
+})();
+</script>
+</body>
+</html>

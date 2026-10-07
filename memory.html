@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Memory Match | BrainBox</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>Memory <span>Match</span></h1>
+  <p>Flip cards and find all eight matching pairs</p>
+</header>
+
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to games</a>
+
+  <div class="game-box">
+    <div class="score-bar">
+      <span>Moves: <strong id="moves">0</strong></span>
+      <span>Pairs: <strong id="pairs">0</strong>/8</span>
+      <span>Time: <strong id="time">0</strong>s</span>
+    </div>
+    <div class="memory-grid" id="grid"></div>
+    <div class="feedback" id="feedback"></div>
+    <p style="margin-top:14px"><button class="btn primary" id="restart">Restart</button></p>
+  </div>
+
+  <div class="game-box" id="winScreen" style="display:none; margin-top:16px">
+    <h2>You found them all!</h2>
+    <p class="question" id="winStats"></p>
+    <p class="hint">moves · time</p>
+    <p style="margin-top:18px"><button class="btn primary" id="again">Play again</button></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var ICONS = ["🍎", "⚽", "🎵", "🔬", "🌍", "📚", "🎨", "🚀"];
+  var first = null, lock = false, moves = 0, pairs = 0, time = 0, timer = null;
+
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  function build() {
+    clearInterval(timer);
+    first = null; lock = false; moves = 0; pairs = 0; time = 0;
+    document.getElementById("moves").textContent = 0;
+    document.getElementById("pairs").textContent = 0;
+    document.getElementById("time").textContent = 0;
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("winScreen").style.display = "none";
+    document.querySelector(".game-box").style.display = "block";
+
+    var deck = shuffle(ICONS.concat(ICONS));
+    var grid = document.getElementById("grid");
+    grid.innerHTML = "";
+    deck.forEach(function (icon) {
+      var btn = document.createElement("button");
+      btn.textContent = icon;
+      btn.dataset.icon = icon;
+      btn.onclick = function () { flip(btn); };
+      grid.appendChild(btn);
+    });
+
+    timer = setInterval(function () {
+      time++;
+      document.getElementById("time").textContent = time;
+    }, 1000);
+  }
+
+  function flip(btn) {
+    if (lock || btn.classList.contains("flipped") || btn.classList.contains("done")) return;
+    btn.classList.add("flipped");
+
+    if (!first) {
+      first = btn;
+      return;
+    }
+
+    moves++;
+    document.getElementById("moves").textContent = moves;
+    lock = true;
+
+    if (first.dataset.icon === btn.dataset.icon) {
+      first.classList.add("done");
+      btn.classList.add("done");
+      first.classList.remove("flipped");
+      btn.classList.remove("flipped");
+      pairs++;
+      document.getElementById("pairs").textContent = pairs;
+      reset();
+      if (pairs === 8) {
+        clearInterval(timer);
+        setTimeout(function () {
+          document.querySelector(".game-box").style.display = "none";
+          var win = document.getElementById("winScreen");
+          win.style.display = "block";
+          document.getElementById("winStats").textContent = moves + " · " + time + "s";
+        }, 400);
+      }
+    } else {
+      setTimeout(function () {
+        first.classList.remove("flipped");
+        btn.classList.remove("flipped");
+        reset();
+      }, 700);
+    }
+  }
+
+  function reset() {
+    first = null;
+    lock = false;
+  }
+
+  document.getElementById("restart").onclick = build;
+  document.getElementById("again").onclick = build;
+  build();
+})();
+</script>
+</body>
+</html>

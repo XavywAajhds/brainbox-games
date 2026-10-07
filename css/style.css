@@ -1,0 +1,224 @@
+:root {
+  --bg: #0f1220;
+  --card: #1a1f35;
+  --card-hover: #222849;
+  --text: #eef0ff;
+  --muted: #9aa3c7;
+  --accent: #4cc9f0;
+  --accent2: #b5e48c;
+  --wrong: #f2545b;
+  --radius: 14px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+header {
+  padding: 24px 16px 8px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.9rem;
+  letter-spacing: 0.5px;
+}
+
+header h1 span { color: var(--accent); }
+
+header p {
+  color: var(--muted);
+  margin-top: 6px;
+  font-size: 0.95rem;
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: block;
+  background: var(--card);
+  border: 1px solid #2a3155;
+  border-radius: var(--radius);
+  padding: 22px 18px;
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.card:hover {
+  background: var(--card-hover);
+  transform: translateY(-3px);
+}
+
+.card .icon { font-size: 2rem; }
+
+.card h2 { font-size: 1.1rem; margin: 10px 0 6px; }
+
+.card p { color: var(--muted); font-size: 0.88rem; line-height: 1.4; }
+
+.game-box {
+  background: var(--card);
+  border: 1px solid #2a3155;
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+}
+
+.game-box h2 { margin-bottom: 14px; font-size: 1.3rem; }
+
+.back {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.back:hover { text-decoration: underline; }
+
+.score-bar {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.score-bar strong { color: var(--accent2); }
+
+.question {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 18px 0;
+  letter-spacing: 1px;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.choices button, .btn {
+  background: #2a3155;
+  border: none;
+  color: var(--text);
+  padding: 14px;
+  font-size: 1.05rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.choices button:hover, .btn:hover { background: #384070; }
+
+.btn.primary { background: var(--accent); color: #062033; font-weight: 600; }
+.btn.primary:hover { background: #77d6f5; }
+
+.feedback { min-height: 26px; margin-top: 14px; font-weight: 600; }
+.feedback.good { color: var(--accent2); }
+.feedback.bad { color: var(--wrong); }
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 70px);
+  gap: 10px;
+  justify-content: center;
+  margin: 18px 0;
+}
+
+.memory-grid button {
+  width: 70px;
+  height: 70px;
+  font-size: 1.7rem;
+  border: none;
+  border-radius: 10px;
+  background: #2a3155;
+  color: transparent;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.memory-grid button.flipped, .memory-grid button.done {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
+.memory-grid button.done { background: #1f3d2b; cursor: default; }
+
+.tt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 90px);
+  gap: 8px;
+  justify-content: center;
+  margin: 18px 0;
+}
+
+.tt-grid button {
+  width: 90px;
+  height: 90px;
+  font-size: 2.4rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  background: #2a3155;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.tt-grid button:hover:not(:disabled) { background: #384070; }
+
+.word-display {
+  font-size: 1.9rem;
+  letter-spacing: 6px;
+  font-weight: 700;
+  margin: 18px 0;
+  text-transform: uppercase;
+}
+
+.word-input {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.word-input input {
+  background: #12162a;
+  border: 1px solid #2a3155;
+  border-radius: 10px;
+  color: var(--text);
+  padding: 12px 14px;
+  font-size: 1rem;
+  width: 220px;
+}
+
+.word-input input:focus { outline: 2px solid var(--accent); }
+
+.hint { color: var(--muted); font-size: 0.9rem; min-height: 22px; }
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  padding: 20px;
+}

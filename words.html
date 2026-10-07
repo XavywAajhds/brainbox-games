@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Word Scramble | BrainBox</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>Word <span>Scramble</span></h1>
+  <p>Rearrange the letters to form the correct vocabulary word</p>
+</header>
+
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to games</a>
+
+  <div class="game-box">
+    <div class="score-bar">
+      <span>Round: <strong id="round">1</strong>/10</span>
+      <span>Score: <strong id="score">0</strong></span>
+    </div>
+    <div class="word-display" id="scrambled">—</div>
+    <div class="word-input">
+      <input id="guess" type="text" placeholder="Type your answer" autocomplete="off" />
+      <button class="btn primary" id="submit">Submit</button>
+      <button class="btn" id="skip">Skip</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <p class="hint" id="hint"></p>
+    <p style="margin-top:14px"><button class="btn" id="showHint">Show hint</button></p>
+  </div>
+
+  <div class="game-box" id="endScreen" style="display:none; margin-top:16px">
+    <h2>Great practice!</h2>
+    <p class="question" id="finalScore">0</p>
+    <p class="hint">out of 10 correct</p>
+    <p style="margin-top:18px"><button class="btn primary" id="again">Play again</button></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var WORDS = [
+    { word: "habitat", hint: "The natural home of an animal or plant" },
+    { word: "planet", hint: "A large world orbiting a star" },
+    { word: "molecule", hint: "A group of bonded atoms" },
+    { word: "gravity", hint: "The force that pulls objects to Earth" },
+    { word: "equation", hint: "A math statement with an equals sign" },
+    { word: "history", hint: "The study of past events" },
+    { word: "geography", hint: "The study of places and the Earth" },
+    { word: "fraction", hint: "A part of a whole, like 1/2" },
+    { word: "verb", hint: "A word that shows an action" },
+    { word: "noun", hint: "A word for a person, place, or thing" },
+    { word: "oxygen", hint: "Gas we breathe to survive" },
+    { word: "season", hint: "Spring, summer, fall, or winter" },
+    { word: "triangle", hint: "A shape with three sides" },
+    { word: "library", hint: "A place full of books" },
+    { word: "teacher", hint: "Someone who helps you learn" }
+  ];
+
+  var pool = [], index = 0, score = 0, round = 1, current = "", solved = false;
+
+  function shuffleStr(s) {
+    var arr = s.split("");
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr.join("");
+  }
+
+  function scramble(w) {
+    var out = w;
+    while (out === w) out = shuffleStr(w);
+    return out;
+  }
+
+  function pickWord() {
+    if (index >= pool.length) {
+      pool = WORDS.slice().sort(function () { return Math.random() - 0.5; });
+      index = 0;
+    }
+    return pool[index++];
+  }
+
+  function loadWord() {
+    solved = false;
+    var rec = pickWord();
+    current = rec.word;
+    document.getElementById("scrambled").textContent = scramble(current);
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("feedback").className = "feedback";
+    document.getElementById("hint").textContent = "";
+    document.getElementById("guess").value = "";
+    document.getElementById("guess").focus();
+    document.getElementById("showHint").onclick = function () {
+      document.getElementById("hint").textContent = "Hint: " + rec.hint;
+    };
+  }
+
+  function endRound(win) {
+    var fb = document.getElementById("feedback");
+    if (win) {
+      score++;
+      fb.textContent = "Correct!";
+      fb.className = "feedback good";
+    } else {
+      fb.textContent = "The word was: " + current;
+      fb.className = "feedback bad";
+    }
+    document.getElementById("score").textContent = score;
+    setTimeout(function () {
+      if (round >= 10) {
+        document.querySelector(".game-box").style.display = "none";
+        document.getElementById("endScreen").style.display = "block";
+        document.getElementById("finalScore").textContent = score;
+      } else {
+        round++;
+        document.getElementById("round").textContent = round;
+        loadWord();
+      }
+    }, 900);
+  }
+
+  function submitGuess() {
+    if (solved) return;
+    solved = true;
+    var val = document.getElementById("guess").value.trim().toLowerCase();
+    endRound(val === current);
+  }
+
+  document.getElementById("submit").onclick = submitGuess;
+  document.getElementById("guess").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") submitGuess();
+  });
+  document.getElementById("skip").onclick = function () {
+    if (solved) return;
+    solved = true;
+    endRound(false);
+  };
+  document.getElementById("again").onclick = function () {
+    score = 0; round = 1; index = 0;
+    pool = WORDS.slice().sort(function () { return Math.random() - 0.5; });
+    document.getElementById("score").textContent = 0;
+    document.getElementById("round").textContent = 1;
+    document.querySelector(".game-box").style.display = "block";
+    document.getElementById("endScreen").style.display = "none";
+    loadWord();
+  };
+
+  pool = WORDS.slice().sort(function () { return Math.random() - 0.5; });
+  loadWord();
+})();
+</script>
+</body>
+</html>

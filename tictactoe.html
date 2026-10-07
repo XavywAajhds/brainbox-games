@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tic-Tac-Toe | BrainBox</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>Tic-Tac-<span>Toe</span></h1>
+  <p>You are X — try to beat the computer</p>
+</header>
+
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to games</a>
+
+  <div class="game-box">
+    <div class="score-bar">
+      <span>You: <strong id="youScore">0</strong></span>
+      <span>Ties: <strong id="tieScore">0</strong></span>
+      <span>Computer: <strong id="cpuScore">0</strong></span>
+    </div>
+    <div class="tt-grid" id="board"></div>
+    <div class="feedback" id="feedback">Your turn</div>
+    <p style="margin-top:14px"><button class="btn primary" id="restart">New round</button></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var WIN = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  var board, over, youScore = 0, cpuScore = 0, tieScore = 0;
+
+  function line(player) {
+    for (var i = 0; i < WIN.length; i++) {
+      var a = WIN[i][0], b = WIN[i][1], c = WIN[i][2];
+      if (board[a] === player && board[b] === player && board[c] === player) return [a, b, c];
+    }
+    return null;
+  }
+
+  function empty() {
+    var out = [];
+    for (var i = 0; i < 9; i++) if (board[i] === "") out.push(i);
+    return out;
+  }
+
+  function finish(msg) {
+    over = true;
+    document.getElementById("feedback").textContent = msg;
+    var winLine = line("O") || line("X");
+    if (winLine) winLine.forEach(function (i) {
+      document.getElementById("board").children[i].style.background = "#1f3d2b";
+    });
+  }
+
+  function cpuMove() {
+    var avail = empty();
+    if (!avail.length) return;
+
+    function best(player) {
+      for (var i = 0; i < WIN.length; i++) {
+        var cells = WIN[i], vals = cells.map(function (c) { return board[c]; });
+        var count = vals.filter(function (v) { return v === player; }).length;
+        var blank = vals.filter(function (v) { return v === ""; }).length;
+        if (count === 2 && blank === 1) return cells[vals.indexOf("")];
+      }
+      return -1;
+    }
+
+    var move = best("O");
+    if (move === -1) move = best("X");
+    if (move === -1 && board[4] === "") move = 4;
+    if (move === -1) {
+      var corners = [0,2,6,8].filter(function (i) { return board[i] === ""; });
+      if (corners.length) move = corners[Math.floor(Math.random() * corners.length)];
+    }
+    if (move === -1) move = avail[Math.floor(Math.random() * avail.length)];
+
+    board[move] = "O";
+    render(move);
+
+    if (line("O")) {
+      cpuScore++;
+      document.getElementById("cpuScore").textContent = cpuScore;
+      finish("Computer wins!");
+    } else if (!empty().length) {
+      tieScore++;
+      document.getElementById("tieScore").textContent = tieScore;
+      finish("It's a tie!");
+    } else {
+      document.getElementById("feedback").textContent = "Your turn";
+    }
+  }
+
+  function render(last) {
+    var cells = document.getElementById("board").children;
+    for (var i = 0; i < 9; i++) {
+      cells[i].textContent = board[i] || "";
+      cells[i].disabled = board[i] !== "" || over;
+    }
+    if (last !== undefined) cells[last].style.background = "#2a3155";
+  }
+
+  function playerMove(i) {
+    if (over || board[i] !== "") return;
+    board[i] = "X";
+    render();
+
+    if (line("X")) {
+      youScore++;
+      document.getElementById("youScore").textContent = youScore;
+      finish("You win!");
+      return;
+    }
+    if (!empty().length) {
+      tieScore++;
+      document.getElementById("tieScore").textContent = tieScore;
+      finish("It's a tie!");
+      return;
+    }
+
+    document.getElementById("feedback").textContent = "Computer is thinking...";
+    setTimeout(cpuMove, 350);
+  }
+
+  function build() {
+    board = ["","","","","","","","",""];
+    over = false;
+    document.getElementById("feedback").textContent = "Your turn";
+    var el = document.getElementById("board");
+    el.innerHTML = "";
+    for (var i = 0; i < 9; i++) {
+      (function (idx) {
+        var btn = document.createElement("button");
+        btn.onclick = function () { playerMove(idx); };
+        el.appendChild(btn);
+      })(i);
+    }
+    render();
+  }
+
+  document.getElementById("restart").onclick = build;
+  build();
+})();
+</script>
+</body>
+</html>
