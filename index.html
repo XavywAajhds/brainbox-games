@@ -11,61 +11,50 @@
   <aside class="side">
     <div class="brand">Mist<span>.Dev</span></div>
     <nav class="tabs">
-      <button class="tab active" data-page="home" type="button">
-        <img src="assets/home.png" alt="" /><span>Home</span>
-      </button>
-      <button class="tab" data-page="games" type="button">
-        <img src="assets/controller.png" alt="" /><span>Games</span>
-      </button>
-      <button class="tab" data-page="browser" type="button">
-        <img src="assets/globe.png" alt="" /><span>Browser</span>
-      </button>
+      <button class="tab active" data-page="home" type="button"><img src="assets/home.png" alt="" /><span>Home</span></button>
+      <button class="tab" data-page="games" type="button"><img src="assets/controller.png" alt="" /><span>Games</span></button>
+      <button class="tab" data-page="browser" type="button"><img src="assets/globe.png" alt="" /><span>Browser</span></button>
     </nav>
-    <div class="side-foot">v1.0</div>
+    <div class="side-foot">Mist.Dev</div>
   </aside>
 
   <main class="main">
     <section class="page active" id="page-home">
       <div class="hero">
         <h1>Welcome to <span>Mist.Dev</span></h1>
-        <p>Your home for games and the web in one place. Pick a tab on the left to get started.</p>
+        <p>Games and the web, all in one place. Pick a tab on the left.</p>
       </div>
     </section>
 
     <section class="page" id="page-games">
-      <h2 class="page-title">Minecraft Clients</h2>
       <div class="gamelist" id="clients">
-        <button class="gtab" data-src="mc-1.8.8.html" data-title="Minecraft 1.8.8" type="button">
-          <img src="assets/minecraft.png" alt="" />
-          <span class="gtext"><strong>Minecraft</strong><em>EaglercraftX &bull; 1.8.8</em></span>
-        </button>
-        <button class="gtab" data-src="mc-1.12.2.html" data-title="Minecraft 1.12.2" type="button">
-          <img src="assets/minecraft.png" alt="" />
-          <span class="gtext"><strong>Minecraft</strong><em>Eaglercraft &bull; 1.12.2</em></span>
-        </button>
-        <button class="gtab" data-src="mc-1.5.2.html" data-title="Minecraft 1.5.2" type="button">
-          <img src="assets/minecraft.png" alt="" />
-          <span class="gtext"><strong>Minecraft</strong><em>Eaglercraft &bull; 1.5.2</em></span>
-        </button>
-        <button class="gtab" data-src="mc-beta-1.7.3.html" data-title="Minecraft Beta 1.7.3" type="button">
-          <img src="assets/minecraft.png" alt="" />
-          <span class="gtext"><strong>Minecraft Beta</strong><em>Eaglercraft &bull; 1.7.3</em></span>
-        </button>
-        <button class="gtab" data-src="mc-alpha-1.2.6.html" data-title="Minecraft Alpha 1.2.6" type="button">
-          <img src="assets/minecraft.png" alt="" />
-          <span class="gtext"><strong>Minecraft Alpha</strong><em>Eaglercraft &bull; 1.2.6</em></span>
-        </button>
+        <button class="gtab" data-src="mc-1.8.8.html" data-title="Minecraft 1.8.8" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft</strong><em>EaglercraftX &bull; 1.8.8</em></span></button>
+        <button class="gtab" data-src="mc-1.12.2.html" data-title="Minecraft 1.12.2" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft</strong><em>Eaglercraft &bull; 1.12.2</em></span></button>
+        <button class="gtab" data-src="mc-1.5.2.html" data-title="Minecraft 1.5.2" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft</strong><em>Eaglercraft &bull; 1.5.2</em></span></button>
+        <button class="gtab" data-src="mc-beta-1.7.3.html" data-title="Minecraft Beta 1.7.3" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft Beta</strong><em>Eaglercraft &bull; 1.7.3</em></span></button>
+        <button class="gtab" data-src="mc-alpha-1.2.6.html" data-title="Minecraft Alpha 1.2.6" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft Alpha</strong><em>Eaglercraft &bull; 1.2.6</em></span></button>
       </div>
+      <div class="gamelist" id="games" style="margin-top:12px"></div>
     </section>
 
     <section class="page" id="page-browser">
       <div class="browser">
-        <img class="globe" src="assets/globe.png" alt="" />
-        <h2>Browser</h2>
-        <form class="omnibox" action="https://duckduckgo.com/" method="get" target="_blank" rel="noopener">
-          <input type="text" name="q" placeholder="Search DuckDuckGo or type a URL..." autocomplete="off" autofocus />
+        <div class="bhead">
+          <img class="globe" src="assets/globe.png" alt="" />
+          <span class="bname">Mist<span>.Dev</span> <em>Browser</em></span>
+        </div>
+        <div class="tabbar" id="tabbar"></div>
+        <form class="omnibox" id="omnibox">
+          <span class="omni-dot"></span>
+          <input type="text" id="omniInput" placeholder="Search with DuckDuckGo or type a URL" autocomplete="off" />
           <button type="submit">Go</button>
         </form>
+        <div class="shortcuts">
+          <a class="shortcut" href="https://www.youtube.com/" target="_blank" rel="noopener" data-url="https://www.youtube.com/"><span class="sc-ico" style="background:#ff0000">&#9654;</span>YouTube</a>
+          <a class="shortcut" href="https://www.tiktok.com/" target="_blank" rel="noopener" data-url="https://www.tiktok.com/"><span class="sc-ico" style="background:#111">&#9835;</span>TikTok</a>
+          <a class="shortcut" href="https://chat.openai.com/" target="_blank" rel="noopener" data-url="https://chat.openai.com/"><span class="sc-ico" style="background:#10a37f">&#10022;</span>ChatGPT</a>
+        </div>
+        <div class="viewport" id="viewport"><p class="vp-hint">Type above or pick a shortcut.</p></div>
       </div>
     </section>
   </main>
@@ -74,7 +63,7 @@
 <div class="overlay" id="overlay" hidden>
   <div class="win" id="win">
     <div class="win-bar">
-      <span class="win-title" id="winTitle">Minecraft</span>
+      <span class="win-title" id="winTitle">Game</span>
       <div class="win-btns">
         <a class="win-btn" id="openTab" href="#" target="_blank" rel="noopener" title="Open in new tab">&#8599;</a>
         <button class="win-btn" id="fsBtn" type="button" title="Toggle fullscreen">&#9974;</button>
@@ -82,14 +71,16 @@
       </div>
     </div>
     <div class="win-body">
-      <div class="win-loading" id="winLoading">Loading client...</div>
-      <iframe id="frame" title="Minecraft" allowfullscreen allow="autoplay; fullscreen; gamepad; pointer-lock"></iframe>
+      <div class="win-loading" id="winLoading">Loading...</div>
+      <div class="win-msg" id="winMsg" hidden></div>
+      <iframe id="frame" title="Game" allowfullscreen allow="autoplay; fullscreen; gamepad; pointer-lock"></iframe>
     </div>
   </div>
 </div>
 
 <script>
 (function () {
+  /* sidebar tabs */
   var tabs = document.querySelectorAll(".tab");
   var pages = document.querySelectorAll(".page");
   tabs.forEach(function (tab) {
@@ -101,26 +92,85 @@
     });
   });
 
+  /* game catalog */
+  var games = [
+    ["Slope", "\u26F7\uFE0F", "slope"],
+    ["Retro Bowl", "\uD83C\uDFC8", "retro-bowl"],
+    ["Run 3", "\uD83C\uDFC3", "run-3"],
+    ["1v1.LOL", "\uD83D\uDD2B", "1v1lol"],
+    ["Snow Rider 3D", "\uD83D\uDEF7", "snow-rider-3d"],
+    ["Happy Wheels", "\uD83D\uDEB4", "happy-wheels"],
+    ["Cookie Clicker", "\uD83C\uDF6A", "cookie-clicker"],
+    ["Tetris", "\uD83E\uDDF1", "tetris"],
+    ["Smash Karts", "\uD83C\uDFCE\uFE0F", "smash-karts"],
+    ["Tunnel Rush", "\uD83C\uDF00", "tunnel-rush"],
+    ["BitLife", "\uD83D\uDC76", "bitlife"],
+    ["Basketball Stars", "\uD83C\uDFC0", "basketball-stars"],
+    ["Shell Shockers", "\uD83E\uDD5A", "shell-shockers"],
+    ["Among Us (Web Version)", "\uD83D\uDC7D", "among-us"],
+    ["Drive Mad", "\uD83D\uDE97", "drive-mad"],
+    ["Paper.io 2", "\uD83D\uDFE6", "paperio2"],
+    ["Super Mario Bros.", "\uD83C\uDF44", "super-mario-bros"],
+    ["Pac-Man", "\uD83D\uDFE1", "pac-man"],
+    ["Geometry Dash", "\uD83D\uDD3A", "geometry-dash"],
+    ["Moto X3M", "\uD83C\uDFCD\uFE0F", "moto-x3m"]
+  ];
+  var gamesEl = document.getElementById("games");
+  games.forEach(function (g) {
+    var b = document.createElement("button");
+    b.className = "gtab";
+    b.type = "button";
+    b.dataset.src = "games/" + g[2] + ".html";
+    b.dataset.title = g[0];
+    b.innerHTML = '<span class="gico">' + g[1] + '</span><span class="gtext"><strong>' + g[0] + '</strong><em>Play now</em></span>';
+    gamesEl.appendChild(b);
+  });
+
+  /* game window */
   var overlay = document.getElementById("overlay");
   var win = document.getElementById("win");
   var frame = document.getElementById("frame");
   var titleEl = document.getElementById("winTitle");
   var loading = document.getElementById("winLoading");
+  var msg = document.getElementById("winMsg");
   var openTab = document.getElementById("openTab");
 
-  function openGame(src, title) {
+  function launch(src, title) {
     titleEl.textContent = title;
     openTab.href = src;
     overlay.hidden = false;
-    loading.hidden = false;
+    msg.hidden = true;
+    frame.hidden = false;
+    frame.style.display = "";
+    loading.hidden = true;
     frame.src = "about:blank";
     frame.src = src;
   }
 
+  function missing(title, path) {
+    overlay.hidden = false;
+    frame.hidden = true;
+    loading.hidden = true;
+    msg.hidden = false;
+    openTab.href = "#";
+    titleEl.textContent = title;
+    msg.innerHTML = "<strong>" + title + "</strong> is not installed yet.<br><br>Add the game file at <code>" + path + "</code> and it will run here.";
+  }
+
+  function openGame(src, title, isExternal) {
+    if (isExternal) { launch(src, title); return; }
+    fetch(src, { method: "HEAD" }).then(function (r) {
+      if (r.ok) launch(src, title); else missing(title, src);
+    }).catch(function () { missing(title, src); });
+  }
+
   document.getElementById("clients").addEventListener("click", function (e) {
-    var btn = e.target.closest(".gtab");
-    if (!btn) return;
-    openGame(btn.dataset.src, btn.dataset.title);
+    var b = e.target.closest(".gtab");
+    if (b) openGame(b.dataset.src, b.dataset.title, false);
+  });
+  document.getElementById("games").addEventListener("click", function (e) {
+    var b = e.target.closest(".gtab");
+    if (b) openGame(b.dataset.src, b.dataset.title, false);
   });
 
   frame.addEventListener("load", function () {
@@ -133,24 +183,107 @@
     overlay.hidden = true;
   }
   document.getElementById("closeBtn").addEventListener("click", closeWin);
-
   document.getElementById("fsBtn").addEventListener("click", function () {
-    if (!document.fullscreenElement) {
-      if (win.requestFullscreen) win.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
+    if (!document.fullscreenElement) { if (win.requestFullscreen) win.requestFullscreen(); }
+    else { document.exitFullscreen(); }
   });
-
   document.addEventListener("fullscreenchange", function () {
     var b = document.getElementById("fsBtn");
     b.innerHTML = document.fullscreenElement ? "&#10064;" : "&#9974;";
     b.title = document.fullscreenElement ? "Exit fullscreen" : "Toggle fullscreen";
   });
-
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !document.fullscreenElement && !overlay.hidden) closeWin();
   });
+
+  /* mini browser with tabs + shortcuts */
+  var state = { tabs: [{ id: 1, title: "New Tab", url: null }], active: 1, seq: 1 };
+  var tabbar = document.getElementById("tabbar");
+  var viewport = document.getElementById("viewport");
+
+  function activeTab() { return state.tabs.filter(function (t) { return t.id === state.active; })[0]; }
+
+  function renderTabs() {
+    tabbar.innerHTML = "";
+    state.tabs.forEach(function (t) {
+      var d = document.createElement("div");
+      d.className = "btab" + (t.id === state.active ? " active" : "");
+      d.innerHTML = "<span>" + t.title + "</span>";
+      d.addEventListener("click", function () { state.active = t.id; renderTabs(); renderView(); });
+      if (state.tabs.length > 1) {
+        var x = document.createElement("button");
+        x.className = "btab-x";
+        x.textContent = "\u00D7";
+        x.addEventListener("click", function (ev) { ev.stopPropagation(); closeTab(t.id); });
+        d.appendChild(x);
+      }
+      tabbar.appendChild(d);
+    });
+    var add = document.createElement("button");
+    add.className = "btab-add";
+    add.textContent = "+";
+    add.title = "New tab";
+    add.addEventListener("click", newTab);
+    tabbar.appendChild(add);
+  }
+
+  function newTab() {
+    state.seq++;
+    state.tabs.push({ id: state.seq, title: "New Tab", url: null });
+    state.active = state.seq;
+    renderTabs(); renderView();
+  }
+
+  function closeTab(id) {
+    state.tabs = state.tabs.filter(function (t) { return t.id !== id; });
+    if (state.active === id) state.active = state.tabs[state.tabs.length - 1].id;
+    renderTabs(); renderView();
+  }
+
+  function navigate(url, title) {
+    var t = activeTab();
+    t.url = url; t.title = title || url;
+    renderTabs(); renderView();
+  }
+
+  function renderView() {
+    var t = activeTab();
+    if (!t.url) {
+      viewport.innerHTML = '<p class="vp-hint">Type above or pick a shortcut.</p>';
+      return;
+    }
+    viewport.innerHTML = "";
+    var bar = document.createElement("div");
+    bar.className = "vp-note";
+    var a = document.createElement("a");
+    a.href = t.url; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = "Open in new tab";
+    bar.appendChild(document.createTextNode(t.url + " "));
+    bar.appendChild(a);
+    var f = document.createElement("iframe");
+    f.className = "vp-frame";
+    f.src = t.url;
+    viewport.appendChild(bar);
+    viewport.appendChild(f);
+  }
+
+  document.getElementById("omnibox").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var q = document.getElementById("omniInput").value.trim();
+    if (!q) return;
+    var url = /^https?:\/\//i.test(q) ? q : "https://duckduckgo.com/?q=" + encodeURIComponent(q);
+    navigate(url, "DuckDuckGo");
+  });
+
+  document.querySelectorAll(".shortcut").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      navigate(a.dataset.url, a.textContent.trim());
+    });
+  });
+
+  renderTabs();
+  renderView();
 })();
 </script>
 </body>

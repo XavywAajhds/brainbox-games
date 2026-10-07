@@ -690,3 +690,147 @@ footer {
   .tab span { display: none; }
   .main { padding: 20px 16px 48px; }
 }
+
+/* ---- game tile emoji icon ---- */
+.gico {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  border-radius: 12px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+}
+
+/* ---- Mist.Dev browser ---- */
+.browser {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.bhead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.bhead .globe { width: 26px; height: 26px; object-fit: contain; margin: 0; }
+.bname { font-size: 1.05rem; font-weight: 700; }
+.bname span { color: var(--accent); }
+.bname em { color: var(--muted); font-style: normal; font-weight: 500; font-size: 0.9rem; }
+
+.tabbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px 0;
+  overflow-x: auto;
+}
+.btab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px 10px 0 0;
+  background: var(--bg2);
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  white-space: nowrap;
+  max-width: 200px;
+}
+.btab.active { background: #2f2138; color: var(--text); }
+.btab span { overflow: hidden; text-overflow: ellipsis; }
+.btab-x { border: 0; background: transparent; color: inherit; cursor: pointer; font-size: 1rem; line-height: 1; }
+.btab-x:hover { color: var(--accent); }
+.btab-add {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+.btab-add:hover { background: var(--card-hover); }
+
+.omnibox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.omni-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.omnibox input { flex: 1; background: var(--bg2); }
+
+.shortcuts { display: flex; gap: 10px; flex-wrap: wrap; padding: 14px; }
+.shortcut {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 14px;
+  border-radius: 12px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.shortcut:hover { border-color: var(--accent); transform: translateY(-2px); }
+.sc-ico {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.viewport { min-height: 320px; display: flex; flex-direction: column; }
+.vp-hint { color: var(--muted); margin: auto; font-size: 0.95rem; }
+.vp-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  word-break: break-all;
+}
+.vp-note a { color: var(--accent); text-decoration: none; }
+.vp-frame { width: 100%; height: 420px; border: 0; background: #fff; }
+
+/* ---- game window message ---- */
+.win-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.win-msg strong { color: var(--text); }
+.win-msg code { background: var(--bg2); border: 1px solid var(--line); padding: 2px 6px; border-radius: 6px; color: var(--accent); }
