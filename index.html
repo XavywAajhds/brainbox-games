@@ -46,9 +46,9 @@
           <span class="bname">Mist<span>.Dev</span> <em>Browser</em></span>
         </div>
         <div class="tabbar" id="tabbar"></div>
-<form class="omnibox" id="omnibox" action="https://www.google.com/search" method="get" target="_blank" rel="noopener">
+<form class="omnibox" id="omnibox" action="https://www.bing.com/search" method="get" target="_blank" rel="noopener">
           <span class="omni-dot"></span>
-          <input type="text" name="q" id="omniInput" placeholder="Search Google (opens in a new tab)" autocomplete="off" />
+          <input type="text" name="q" id="omniInput" placeholder="Search Bing (opens in a new tab)" autocomplete="off" />
           <button type="submit">Go</button>
         </form>
         <div class="shortcuts">
@@ -282,6 +282,7 @@ function navigate(url, title) {
       window.open(q, "_blank", "noopener");
       navigate(q, q);
     } else {
+      window.open("https://www.bing.com/search?q=" + encodeURIComponent(q), "_blank", "noopener");
       search(q);
     }
   });
