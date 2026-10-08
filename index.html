@@ -33,15 +33,7 @@
         <button class="gtab" data-src="mc-1.5.2.html" data-title="Minecraft 1.5.2" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft</strong><em>Eaglercraft &bull; 1.5.2</em></span></button>
         <button class="gtab" data-src="mc-beta-1.7.3.html" data-title="Minecraft Beta 1.7.3" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft Beta</strong><em>Eaglercraft &bull; 1.7.3</em></span></button>
         <button class="gtab" data-src="mc-alpha-1.2.6.html" data-title="Minecraft Alpha 1.2.6" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft Alpha</strong><em>Eaglercraft &bull; 1.2.6</em></span></button>
-      </div>
-      <div class="gamelist" id="games" style="margin-top:12px">
-        <button class="gtab" data-src="games/tictactoe.html" data-title="Tic-Tac-Toe" type="button"><span class="gico">&#10060;</span><span class="gtext"><strong>Tic-Tac-Toe</strong><em>Play now</em></span></button>
-        <button class="gtab" data-src="games/snake.html" data-title="Snake" type="button"><span class="gico">&#128013;</span><span class="gtext"><strong>Snake</strong><em>Play now</em></span></button>
-        <button class="gtab" data-src="games/2048.html" data-title="2048" type="button"><span class="gico">&#128290;</span><span class="gtext"><strong>2048</strong><em>Play now</em></span></button>
-        <button class="gtab" data-src="games/memory.html" data-title="Memory" type="button"><span class="gico">&#129504;</span><span class="gtext"><strong>Memory Match</strong><em>Play now</em></span></button>
-        <button class="gtab" data-src="games/minesweeper.html" data-title="Minesweeper" type="button"><span class="gico">&#128163;</span><span class="gtext"><strong>Minesweeper</strong><em>Play now</em></span></button>
-        <button class="gtab" data-src="games/whack-a-mole.html" data-title="Whack-a-Mole" type="button"><span class="gico">&#128296;</span><span class="gtext"><strong>Whack-a-Mole</strong><em>Play now</em></span></button>
-      </div>
+</div>
     </section>
 
     <section class="page" id="page-browser">
@@ -137,10 +129,6 @@ function openGame(src, title) {
   }
 
   document.getElementById("clients").addEventListener("click", function (e) {
-    var b = e.target.closest(".gtab");
-    if (b) openGame(b.dataset.src, b.dataset.title);
-  });
-  document.getElementById("games").addEventListener("click", function (e) {
     var b = e.target.closest(".gtab");
     if (b) openGame(b.dataset.src, b.dataset.title);
   });
