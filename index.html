@@ -34,7 +34,14 @@
         <button class="gtab" data-src="mc-beta-1.7.3.html" data-title="Minecraft Beta 1.7.3" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft Beta</strong><em>Eaglercraft &bull; 1.7.3</em></span></button>
         <button class="gtab" data-src="mc-alpha-1.2.6.html" data-title="Minecraft Alpha 1.2.6" type="button"><img src="assets/minecraft.png" alt="" /><span class="gtext"><strong>Minecraft Alpha</strong><em>Eaglercraft &bull; 1.2.6</em></span></button>
       </div>
-      <div class="gamelist" id="games" style="margin-top:12px"></div>
+      <div class="gamelist" id="games" style="margin-top:12px">
+        <button class="gtab" data-src="games/tictactoe.html" data-title="Tic-Tac-Toe" type="button"><span class="gico">&#10060;</span><span class="gtext"><strong>Tic-Tac-Toe</strong><em>Play now</em></span></button>
+        <button class="gtab" data-src="games/snake.html" data-title="Snake" type="button"><span class="gico">&#128013;</span><span class="gtext"><strong>Snake</strong><em>Play now</em></span></button>
+        <button class="gtab" data-src="games/2048.html" data-title="2048" type="button"><span class="gico">&#128290;</span><span class="gtext"><strong>2048</strong><em>Play now</em></span></button>
+        <button class="gtab" data-src="games/memory.html" data-title="Memory" type="button"><span class="gico">&#129504;</span><span class="gtext"><strong>Memory Match</strong><em>Play now</em></span></button>
+        <button class="gtab" data-src="games/minesweeper.html" data-title="Minesweeper" type="button"><span class="gico">&#128163;</span><span class="gtext"><strong>Minesweeper</strong><em>Play now</em></span></button>
+        <button class="gtab" data-src="games/whack-a-mole.html" data-title="Whack-a-Mole" type="button"><span class="gico">&#128296;</span><span class="gtext"><strong>Whack-a-Mole</strong><em>Play now</em></span></button>
+      </div>
     </section>
 
     <section class="page" id="page-browser">
@@ -44,9 +51,9 @@
           <span class="bname">Mist<span>.Dev</span> <em>Browser</em></span>
         </div>
         <div class="tabbar" id="tabbar"></div>
-<form class="omnibox" id="omnibox" action="https://duckduckgo.com/" method="get" target="_blank" rel="noopener">
+<form class="omnibox" id="omnibox" action="https://www.google.com/search" method="get" target="_blank" rel="noopener">
           <span class="omni-dot"></span>
-          <input type="text" name="q" id="omniInput" placeholder="Search with DuckDuckGo (opens in a new tab)" autocomplete="off" />
+          <input type="text" name="q" id="omniInput" placeholder="Search Google (opens in a new tab)" autocomplete="off" />
           <button type="submit">Go</button>
         </form>
         <div class="shortcuts">
@@ -92,41 +99,7 @@
     });
   });
 
-  /* game catalog */
-  var games = [
-    ["Slope", "\u26F7\uFE0F", "slope"],
-    ["Retro Bowl", "\uD83C\uDFC8", "retro-bowl"],
-    ["Run 3", "\uD83C\uDFC3", "run-3"],
-    ["1v1.LOL", "\uD83D\uDD2B", "1v1lol"],
-    ["Snow Rider 3D", "\uD83D\uDEF7", "snow-rider-3d"],
-    ["Happy Wheels", "\uD83D\uDEB4", "happy-wheels"],
-    ["Cookie Clicker", "\uD83C\uDF6A", "cookie-clicker"],
-    ["Tetris", "\uD83E\uDDF1", "tetris"],
-    ["Smash Karts", "\uD83C\uDFCE\uFE0F", "smash-karts"],
-    ["Tunnel Rush", "\uD83C\uDF00", "tunnel-rush"],
-    ["BitLife", "\uD83D\uDC76", "bitlife"],
-    ["Basketball Stars", "\uD83C\uDFC0", "basketball-stars"],
-    ["Shell Shockers", "\uD83E\uDD5A", "shell-shockers"],
-    ["Among Us (Web Version)", "\uD83D\uDC7D", "among-us"],
-    ["Drive Mad", "\uD83D\uDE97", "drive-mad"],
-    ["Paper.io 2", "\uD83D\uDFE6", "paperio2"],
-    ["Super Mario Bros.", "\uD83C\uDF44", "super-mario-bros"],
-    ["Pac-Man", "\uD83D\uDFE1", "pac-man"],
-    ["Geometry Dash", "\uD83D\uDD3A", "geometry-dash"],
-    ["Moto X3M", "\uD83C\uDFCD\uFE0F", "moto-x3m"]
-  ];
-  var gamesEl = document.getElementById("games");
-  games.forEach(function (g) {
-    var b = document.createElement("button");
-    b.className = "gtab";
-    b.type = "button";
-    b.dataset.src = "games/" + g[2] + ".html";
-    b.dataset.title = g[0];
-    b.innerHTML = '<span class="gico">' + g[1] + '</span><span class="gtext"><strong>' + g[0] + '</strong><em>Play now</em></span>';
-    gamesEl.appendChild(b);
-  });
-
-  /* game window */
+/* game window */
   var overlay = document.getElementById("overlay");
   var win = document.getElementById("win");
   var frame = document.getElementById("frame");
@@ -157,20 +130,19 @@
     msg.innerHTML = "<strong>" + title + "</strong> is not installed yet.<br><br>Add the game file at <code>" + path + "</code> and it will run here.";
   }
 
-  function openGame(src, title, isExternal) {
-    if (isExternal) { launch(src, title); return; }
+function openGame(src, title) {
     fetch(src, { method: "HEAD" }).then(function (r) {
-      if (r.ok) launch(src, title); else missing(title, src);
-    }).catch(function () { missing(title, src); });
+      if (r.status === 404) missing(title, src); else launch(src, title);
+    }).catch(function () { launch(src, title); });
   }
 
   document.getElementById("clients").addEventListener("click", function (e) {
     var b = e.target.closest(".gtab");
-    if (b) openGame(b.dataset.src, b.dataset.title, false);
+    if (b) openGame(b.dataset.src, b.dataset.title);
   });
   document.getElementById("games").addEventListener("click", function (e) {
     var b = e.target.closest(".gtab");
-    if (b) openGame(b.dataset.src, b.dataset.title, false);
+    if (b) openGame(b.dataset.src, b.dataset.title);
   });
 
   frame.addEventListener("load", function () {
@@ -274,9 +246,9 @@ function renderView() {
     var q = document.getElementById("omniInput").value.trim();
     if (!q) return;
     var isUrl = /^https?:\/\//i.test(q);
-    var url = isUrl ? q : "https://duckduckgo.com/?q=" + encodeURIComponent(q);
+    var url = isUrl ? q : "https://www.google.com/search?q=" + encodeURIComponent(q);
     window.open(url, "_blank", "noopener");
-    navigate(url, isUrl ? q : "DuckDuckGo");
+    navigate(url, isUrl ? q : "Google");
   });
 
   document.querySelectorAll(".shortcut").forEach(function (a) {

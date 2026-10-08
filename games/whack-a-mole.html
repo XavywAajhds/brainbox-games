@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Whack-a-Mole</title>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; font-family:"Segoe UI",system-ui,sans-serif; background:#0f0b14; color:#eef0ff; }
+  h1 { font-size:1.4rem; margin:0; }
+  .bar { color:#9aa3c7; font-size:.95rem; } .bar b { color:#ff5cae; }
+  #grid { display:grid; grid-template-columns:repeat(3,100px); gap:12px; }
+  .hole { width:100px; height:100px; border-radius:50%; background:#241a2c; display:flex; align-items:center; justify-content:center; font-size:2.4rem; cursor:pointer; user-select:none; transition:transform .08s; }
+  .hole.up { background:#3a1d4e; }
+  .hole:active { transform:scale(.94); }
+  button { border:0; border-radius:10px; padding:10px 18px; background:#ff5cae; color:#2a0417; font-weight:700; cursor:pointer; }
+</style>
+</head>
+<body>
+<h1>Whack-a-Mole</h1>
+<div class="bar">Score: <b id="score">0</b> &middot; Time: <b id="time">30</b>s</div>
+<div id="grid"></div>
+<button id="start">Start</button>
+<script>
+(function () {
+  var grid = document.getElementById("grid"), scoreEl = document.getElementById("score"), timeEl = document.getElementById("time");
+  var score = 0, time = 30, moleTimer, clockTimer, active = null;
+  var holes = [];
+  for (var i=0;i<9;i++) {
+    (function (i) {
+      var h = document.createElement("div");
+      h.className = "hole"; h.textContent = "\uD83D\uDD73";
+      h.addEventListener("click", function () { hit(i, h); });
+      grid.appendChild(h); holes.push(h);
+    })(i);
+  }
+  function pop() {
+    if (active !== null) holes[active].classList.remove("up");
+    active = Math.floor(Math.random()*9);
+    holes[active].textContent = "\uD83D\uDC39";
+    holes[active].classList.add("up");
+  }
+  function hit(i, h) {
+    if (active === i && h.classList.contains("up")) {
+      score++; scoreEl.textContent = score;
+      h.classList.remove("up");
+      var old = active; active = null;
+      setTimeout(function () { holes[old].textContent = "\uD83D\uDD73"; }, 120);
+    }
+  }
+  function start() {
+    score = 0; time = 30; scoreEl.textContent = 0; timeEl.textContent = 30;
+    clearInterval(moleTimer); clearInterval(clockTimer);
+    if (active !== null) { holes[active].classList.remove("up"); active = null; }
+    moleTimer = setInterval(pop, 800);
+    clockTimer = setInterval(function () {
+      time--; timeEl.textContent = time;
+      if (time <= 0) {
+        clearInterval(moleTimer); clearInterval(clockTimer);
+        if (active !== null) holes[active].classList.remove("up");
+        active = null;
+        setTimeout(function () { alert("Time! Score: " + score); }, 100);
+      }
+    }, 1000);
+    pop();
+  }
+  document.getElementById("start").addEventListener("click", start);
+})();
+</script>
+</body>
+</html>
