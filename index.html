@@ -157,7 +157,7 @@ function openGame(src, title) {
   });
 
   /* mini browser with tabs + shortcuts */
-  var state = { tabs: [{ id: 1, title: "New Tab", url: null }], active: 1, seq: 1 };
+  var state = { tabs: [{ id: 1, title: "New Tab", url: null, query: null }], active: 1, seq: 1 };
   var tabbar = document.getElementById("tabbar");
   var viewport = document.getElementById("viewport");
 
@@ -189,7 +189,7 @@ function openGame(src, title) {
 
   function newTab() {
     state.seq++;
-    state.tabs.push({ id: state.seq, title: "New Tab", url: null });
+    state.tabs.push({ id: state.seq, title: "New Tab", url: null, query: null });
     state.active = state.seq;
     renderTabs(); renderView();
   }
@@ -200,43 +200,71 @@ function openGame(src, title) {
     renderTabs(); renderView();
   }
 
-  function navigate(url, title) {
+function navigate(url, title) {
     var t = activeTab();
-    t.url = url; t.title = title || url;
+    t.url = url; t.query = null; t.title = title || url;
     renderTabs(); renderView();
   }
 
-function renderView() {
+  function search(q) {
     var t = activeTab();
-    if (!t.url) {
-      viewport.innerHTML = '<p class="vp-hint">Search above or pick a shortcut. Sites open in a real new tab.</p>';
+    t.query = q; t.url = null; t.title = q;
+    renderTabs(); renderView();
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; });
+  }
+
+  function renderView() {
+    var t = activeTab();
+    if (t.query) {
+      viewport.innerHTML = '<p class="vp-hint">Searching "' + esc(t.query) + '"...</p>';
+      var api = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + encodeURIComponent(t.query) + "&format=json&origin=*&srlimit=10";
+      fetch(api).then(function (r) { return r.json(); }).then(function (d) {
+        var list = (d.query && d.query.search) || [];
+        if (!list.length) { viewport.innerHTML = '<p class="vp-hint">No results for "' + esc(t.query) + '".</p>'; return; }
+        var out = '<div class="results">';
+        list.forEach(function (it) {
+          var link = "https://en.wikipedia.org/wiki/" + encodeURIComponent(it.title.replace(/ /g, "_"));
+          out += '<a class="result" href="' + link + '" target="_blank" rel="noopener"><strong>' + esc(it.title) + '</strong><span>' + esc(it.snippet.replace(/<[^>]+>/g, "")) + '</span></a>';
+        });
+        out += "</div>";
+        viewport.innerHTML = out;
+      }).catch(function () { viewport.innerHTML = '<p class="vp-hint">Search failed. Check your connection.</p>'; });
       return;
     }
-    viewport.innerHTML = "";
-    var card = document.createElement("div");
-    card.className = "vp-card";
-    var a = document.createElement("a");
-    a.href = t.url; a.target = "_blank"; a.rel = "noopener";
-    a.className = "vp-open";
-    a.textContent = "Open " + t.title;
-    var small = document.createElement("span");
-    small.className = "vp-url";
-    small.textContent = t.url;
-    var note = document.createElement("p");
-    note.className = "vp-hint";
-    note.textContent = "This site can't be displayed inside the page, so it opens in a new tab.";
-    card.appendChild(a); card.appendChild(small); card.appendChild(note);
-    viewport.appendChild(card);
+    if (t.url) {
+      viewport.innerHTML = "";
+      var card = document.createElement("div");
+      card.className = "vp-card";
+      var a = document.createElement("a");
+      a.href = t.url; a.target = "_blank"; a.rel = "noopener";
+      a.className = "vp-open";
+      a.textContent = "Open " + t.title;
+      var small = document.createElement("span");
+      small.className = "vp-url";
+      small.textContent = t.url;
+      var note = document.createElement("p");
+      note.className = "vp-hint";
+      note.textContent = "This site can't be displayed inside the page, so it opens in a new tab.";
+      card.appendChild(a); card.appendChild(small); card.appendChild(note);
+      viewport.appendChild(card);
+      return;
+    }
+    viewport.innerHTML = '<p class="vp-hint">Search above or pick a shortcut. Results show here.</p>';
   }
 
   document.getElementById("omnibox").addEventListener("submit", function (e) {
     e.preventDefault();
     var q = document.getElementById("omniInput").value.trim();
     if (!q) return;
-    var isUrl = /^https?:\/\//i.test(q);
-    var url = isUrl ? q : "https://www.google.com/search?q=" + encodeURIComponent(q);
-    window.open(url, "_blank", "noopener");
-    navigate(url, isUrl ? q : "Google");
+    if (/^https?:\/\//i.test(q)) {
+      window.open(q, "_blank", "noopener");
+      navigate(q, q);
+    } else {
+      search(q);
+    }
   });
 
   document.querySelectorAll(".shortcut").forEach(function (a) {
