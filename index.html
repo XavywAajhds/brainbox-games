@@ -46,16 +46,17 @@
           <span class="bname">Mist<span>.Dev</span> <em>Browser</em></span>
         </div>
         <div class="tabbar" id="tabbar"></div>
-<form class="omnibox" id="omnibox" action="https://www.bing.com/search" method="get" target="_blank" rel="noopener">
+<form class="omnibox" id="omnibox">
           <span class="omni-dot"></span>
-          <input type="text" name="q" id="omniInput" placeholder="Search Bing (opens in a new tab)" autocomplete="off" />
+          <input type="text" name="q" id="omniInput" placeholder="Type a site or search" autocomplete="off" />
           <button type="submit">Go</button>
         </form>
-        <div class="shortcuts">
-          <a class="shortcut" href="https://www.youtube.com/" target="_blank" rel="noopener" data-url="https://www.youtube.com/"><span class="sc-ico" style="background:#ff0000">&#9654;</span>YouTube</a>
-          <a class="shortcut" href="https://www.tiktok.com/" target="_blank" rel="noopener" data-url="https://www.tiktok.com/"><span class="sc-ico" style="background:#111">&#9835;</span>TikTok</a>
-          <a class="shortcut" href="https://chat.openai.com/" target="_blank" rel="noopener" data-url="https://chat.openai.com/"><span class="sc-ico" style="background:#10a37f">&#10022;</span>ChatGPT</a>
-          <a class="shortcut" href="https://discord.com/login" target="_blank" rel="noopener" data-url="https://discord.com/login"><span class="sc-ico" style="background:#5865f2">&#128172;</span>Discord</a>
+<div class="shortcuts">
+          <a class="shortcut" href="#" data-url="https://www.wikipedia.org/"><span class="sc-ico" style="background:#000">&#128218;</span>Wikipedia</a>
+          <a class="shortcut" href="#" data-url="https://archive.org/"><span class="sc-ico" style="background:#111">&#127963;</span>Archive</a>
+          <a class="shortcut" href="#" data-url="https://2048game.com/"><span class="sc-ico" style="background:#edc22e">&#127924;</span>2048</a>
+          <a class="shortcut" href="#" data-url="https://www.desmos.com/calculator"><span class="sc-ico" style="background:#2d70b3">&#128200;</span>Desmos</a>
+          <a class="shortcut" href="#" data-url="https://wttr.in/"><span class="sc-ico" style="background:#2b7fff">&#9925;</span>Weather</a>
         </div>
         <div class="viewport" id="viewport"><p class="vp-hint">Type above or pick a shortcut.</p></div>
       </div>
@@ -237,7 +238,7 @@ function navigate(url, title) {
       fetch(api).then(function (r) { return r.json(); }).then(function (d) {
         var list = (d.query && d.query.search) || [];
         if (!list.length) { viewport.innerHTML = '<p class="vp-hint">No results for "' + esc(t.query) + '".</p>'; return; }
-        var out = '<div class="results"><div class="res-head">Results for "' + esc(t.query) + '" &middot; <a href="https://www.bing.com/search?q=' + encodeURIComponent(t.query) + '" target="_blank" rel="noopener">open in Bing</a></div>';
+        var out = '<div class="results"><div class="res-head">Results for "' + esc(t.query) + '"</div>';
         list.forEach(function (it) {
           var link = "https://en.wikipedia.org/wiki/" + encodeURIComponent(it.title.replace(/ /g, "_"));
           out += '<a class="result" href="' + link + '" data-link="' + esc(link) + '"><strong>' + esc(it.title) + '</strong><span>' + esc(it.snippet.replace(/<[^>]+>/g, "")) + '</span></a>';
@@ -255,20 +256,11 @@ function navigate(url, title) {
     }
     if (t.url) {
       viewport.innerHTML = "";
-      var card = document.createElement("div");
-      card.className = "vp-card";
-      var a = document.createElement("a");
-      a.href = t.url; a.target = "_blank"; a.rel = "noopener";
-      a.className = "vp-open";
-      a.textContent = "Open " + t.title;
-      var small = document.createElement("span");
-      small.className = "vp-url";
-      small.textContent = t.url;
-      var note = document.createElement("p");
-      note.className = "vp-hint";
-      note.textContent = "This site can't be displayed inside the page, so it opens in a new tab.";
-      card.appendChild(a); card.appendChild(small); card.appendChild(note);
-      viewport.appendChild(card);
+      var f = document.createElement("iframe");
+      f.className = "vp-frame";
+      f.setAttribute("referrerpolicy", "no-referrer");
+      f.src = t.url;
+      viewport.appendChild(f);
       return;
     }
     viewport.innerHTML = '<p class="vp-hint">Search above or pick a shortcut. Results show here.</p>';
@@ -278,9 +270,9 @@ function navigate(url, title) {
     e.preventDefault();
     var q = document.getElementById("omniInput").value.trim();
     if (!q) return;
-    if (/^https?:\/\//i.test(q)) {
-      window.open(q, "_blank", "noopener");
-      navigate(q, q);
+    var isUrl = /^https?:\/\//i.test(q) || /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(q);
+    if (isUrl) {
+      navigate(/^https?:\/\//i.test(q) ? q : "https://" + q, q);
     } else {
       search(q);
     }
@@ -289,7 +281,6 @@ function navigate(url, title) {
   document.querySelectorAll(".shortcut").forEach(function (a) {
     a.addEventListener("click", function (e) {
       e.preventDefault();
-      window.open(a.dataset.url, "_blank", "noopener");
       navigate(a.dataset.url, a.textContent.trim());
     });
   });
