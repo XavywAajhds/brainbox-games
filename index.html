@@ -237,7 +237,7 @@ function navigate(url, title) {
       fetch(api).then(function (r) { return r.json(); }).then(function (d) {
         var list = (d.query && d.query.search) || [];
         if (!list.length) { viewport.innerHTML = '<p class="vp-hint">No results for "' + esc(t.query) + '".</p>'; return; }
-        var out = '<div class="results">';
+        var out = '<div class="results"><div class="res-head">Results for "' + esc(t.query) + '" &middot; <a href="https://www.bing.com/search?q=' + encodeURIComponent(t.query) + '" target="_blank" rel="noopener">open in Bing</a></div>';
         list.forEach(function (it) {
           var link = "https://en.wikipedia.org/wiki/" + encodeURIComponent(it.title.replace(/ /g, "_"));
           out += '<a class="result" href="' + link + '" data-link="' + esc(link) + '"><strong>' + esc(it.title) + '</strong><span>' + esc(it.snippet.replace(/<[^>]+>/g, "")) + '</span></a>';
@@ -282,7 +282,6 @@ function navigate(url, title) {
       window.open(q, "_blank", "noopener");
       navigate(q, q);
     } else {
-      window.open("https://www.bing.com/search?q=" + encodeURIComponent(q), "_blank", "noopener");
       search(q);
     }
   });
