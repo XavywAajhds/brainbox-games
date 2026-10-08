@@ -19,10 +19,13 @@
   </aside>
 
   <main class="main">
-    <section class="page active" id="page-home">
+<section class="page active" id="page-home">
       <div class="hero">
         <h1>Welcome to <span>Mist.Dev</span></h1>
         <p>Games and the web, all in one place. Pick a tab on the left.</p>
+        <div class="hero-actions">
+          <a class="hero-btn" href="https://discord.gg/TYbRtQRc7k" target="_blank" rel="noopener">Join Discord</a>
+        </div>
       </div>
     </section>
 
@@ -52,6 +55,7 @@
           <a class="shortcut" href="https://www.youtube.com/" target="_blank" rel="noopener" data-url="https://www.youtube.com/"><span class="sc-ico" style="background:#ff0000">&#9654;</span>YouTube</a>
           <a class="shortcut" href="https://www.tiktok.com/" target="_blank" rel="noopener" data-url="https://www.tiktok.com/"><span class="sc-ico" style="background:#111">&#9835;</span>TikTok</a>
           <a class="shortcut" href="https://chat.openai.com/" target="_blank" rel="noopener" data-url="https://chat.openai.com/"><span class="sc-ico" style="background:#10a37f">&#10022;</span>ChatGPT</a>
+          <a class="shortcut" href="https://discord.com/login" target="_blank" rel="noopener" data-url="https://discord.com/login"><span class="sc-ico" style="background:#5865f2">&#128172;</span>Discord</a>
         </div>
         <div class="viewport" id="viewport"><p class="vp-hint">Type above or pick a shortcut.</p></div>
       </div>
@@ -212,6 +216,15 @@ function navigate(url, title) {
     renderTabs(); renderView();
   }
 
+  function newTabWith(url, title) {
+    state.seq++;
+    state.tabs.push({ id: state.seq, title: title || url, url: url, query: null });
+    state.active = state.seq;
+    renderTabs(); renderView();
+  }
+
+  function openLink(url, title) { newTabWith(url, title); }
+
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; });
   }
@@ -227,10 +240,16 @@ function navigate(url, title) {
         var out = '<div class="results">';
         list.forEach(function (it) {
           var link = "https://en.wikipedia.org/wiki/" + encodeURIComponent(it.title.replace(/ /g, "_"));
-          out += '<a class="result" href="' + link + '" target="_blank" rel="noopener"><strong>' + esc(it.title) + '</strong><span>' + esc(it.snippet.replace(/<[^>]+>/g, "")) + '</span></a>';
+          out += '<a class="result" href="' + link + '" data-link="' + esc(link) + '"><strong>' + esc(it.title) + '</strong><span>' + esc(it.snippet.replace(/<[^>]+>/g, "")) + '</span></a>';
         });
         out += "</div>";
         viewport.innerHTML = out;
+        Array.prototype.forEach.call(viewport.querySelectorAll(".result"), function (el) {
+          el.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            openLink(el.getAttribute("data-link"), el.querySelector("strong").textContent);
+          });
+        });
       }).catch(function () { viewport.innerHTML = '<p class="vp-hint">Search failed. Check your connection.</p>'; });
       return;
     }
